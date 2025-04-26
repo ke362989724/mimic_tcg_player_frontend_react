@@ -1,34 +1,31 @@
-import React from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import React, { useState } from "react";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { postGoogleOauthCallback } from "@/api-service/main";
+import { CredentialResponse } from "@react-oauth/google";
 
 type Props = {};
 
 const SignUpDialog = (props: Props) => {
+  const {} = props;
+
+  const handleGoogleSuccess = async (
+    credentialResponse: CredentialResponse,
+  ) => {
+    try {
+      await postGoogleOauthCallback(credentialResponse.credential as string);
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
-    <div>
-      <Dialog>
-        <DialogTrigger className="mx-1 my-3">
-          <Button className="cursor-pointer">Sign up</Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Sign up</DialogTitle>
-            <DialogDescription>
-              This action cannot be undone. This will permanently delete your
-              account and remove your data from our servers.
-            </DialogDescription>
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
-    </div>
+    <Dialog onOpenChange={() => {}}>
+      <DialogTrigger asChild className="mx-1 my-3">
+        <Button className="cursor-pointer">Sign Up</Button>
+      </DialogTrigger>
+    </Dialog>
   );
 };
 
