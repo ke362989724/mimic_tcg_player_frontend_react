@@ -1,4 +1,4 @@
-import { getCategoryList } from "@/api-service/category-list";
+import { getCategoryList } from "@/api-service/main";
 import {
   Sidebar,
   SidebarContent,
@@ -20,24 +20,26 @@ function AppSidebar() {
   });
 
   return (
-    <Sidebar>
-      <SidebarHeader className="flex border-b-2">
-        <div className="title">Card Category</div>
-      </SidebarHeader>
-      <SidebarContent className="gap-0">
-        {data?.data.map((el: CardCategoryProp) => {
-          return (
-            <Link
-              to="/"
-              className="hover:bg-accent border-b p-3 duration-200 ease-in-out"
-            >
-              <div>{el.name}</div>
-            </Link>
-          );
-        })}
-      </SidebarContent>
-      <SidebarFooter />
-    </Sidebar>
+    data && (
+      <Sidebar>
+        <SidebarHeader className="flex border-b-2">
+          <div className="p1">Card Category</div>
+        </SidebarHeader>
+        <SidebarContent className="gap-0">
+          {data?.data.map((el: CardCategoryProp) => {
+            return (
+              <Link
+                to="/"
+                className="hover:bg-accent border-b p-3 duration-200 ease-in-out"
+              >
+                <div>{el.name}</div>
+              </Link>
+            );
+          })}
+        </SidebarContent>
+        <SidebarFooter />
+      </Sidebar>
+    )
   );
 }
 

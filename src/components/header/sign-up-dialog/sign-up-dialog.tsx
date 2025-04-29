@@ -1,28 +1,21 @@
 import React, { useState } from "react";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { postGoogleOauthCallback } from "@/api-service/main";
-import { CredentialResponse } from "@react-oauth/google";
+import { useNavigate } from "react-router-dom";
 
 type Props = {};
 
 const SignUpDialog = (props: Props) => {
   const {} = props;
-
-  const handleGoogleSuccess = async (
-    credentialResponse: CredentialResponse,
-  ) => {
-    try {
-      await postGoogleOauthCallback(credentialResponse.credential as string);
-      window.location.reload();
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const navigate = useNavigate();
 
   return (
-    <Dialog onOpenChange={() => {}}>
-      <DialogTrigger asChild className="mx-1 my-3">
+    <Dialog
+      onOpenChange={() => {
+        navigate("/sign-up");
+      }}
+    >
+      <DialogTrigger asChild className="mx-1">
         <Button className="cursor-pointer">Sign Up</Button>
       </DialogTrigger>
     </Dialog>

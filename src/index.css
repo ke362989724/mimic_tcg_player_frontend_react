@@ -124,3 +124,10 @@
   @apply font-bold;
   @apply tracking-tight;
 }
+
+.p1 {
+  @apply font-semibold;
+  @apply text-xs md:text-xl lg:text-lg;
+  @apply font-bold;
+  @apply tracking-tight;
+}
