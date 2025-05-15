@@ -112,7 +112,7 @@ const SignUp = () => {
     },
   ]);
 
-  const { data: countries } = useQuery({
+  const countryListQuery = useQuery({
     queryKey: ["countryList"],
     queryFn: getCountryList,
     gcTime: 1000 * 60 * 60 * 24,
@@ -121,13 +121,13 @@ const SignUp = () => {
 
   // Update input fields when countries data changes
   useEffect(() => {
-    if (countries?.data) {
+    if (countryListQuery?.data) {
       setInputFieldList((prevFields) =>
         prevFields.map((field) =>
           field.code === "country"
             ? {
                 ...field,
-                selectList: countries.data.map((country: Country) => ({
+                selectList: countryListQuery?.data.map((country: Country) => ({
                   label: country.name,
                   value: country.id,
                 })),
@@ -136,7 +136,7 @@ const SignUp = () => {
         ),
       );
     }
-  }, [countries?.data]);
+  }, [countryListQuery?.data]);
 
   const signUpSchema = z
     .object({
@@ -174,12 +174,9 @@ const SignUp = () => {
   });
 
   return (
-    <div className="m-auto my-20 max-w-[1240px] border shadow-2xs">
-      <div className="flex w-full justify-center py-20 text-center">
-        <form
-          className="mx-10 w-full max-w-[1000px] space-y-5"
-          onSubmit={handleSubmit(onSubmit)}
-        >
+    <div className="flex w-full flex-1 items-center justify-center">
+      <div className="w-full max-w-[1000px] py-20 text-center shadow-2xl">
+        <form className="mx-10 space-y-5" onSubmit={handleSubmit(onSubmit)}>
           {inputFieldList.map((el, index) =>
             el.inputType === "input" ? (
               <div key={"login" + el.label + index}>

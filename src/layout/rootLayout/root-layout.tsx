@@ -3,18 +3,23 @@ import Header from "../../components/header/header"; // You'll need to create th
 import { SidebarProvider } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/app-sidebar/app-sidebar";
 import { Toaster } from "@/components/ui/sonner";
+import { DialogProvider } from "@/context/DialogContext";
+import CustomDialog from "@/components/dialog/dialog";
 
 export default function Layout() {
   return (
-    <div className="">
+    <DialogProvider>
       <SidebarProvider defaultOpen={false}>
         <AppSidebar />
         <main className="mx-2 w-full md:mx-4">
           <Toaster />
-          <Header />
-          <Outlet />
+          <div className="flex h-screen flex-col">
+            <Header />
+            <Outlet />
+          </div>
+          <CustomDialog />
         </main>
       </SidebarProvider>
-    </div>
+    </DialogProvider>
   );
 }

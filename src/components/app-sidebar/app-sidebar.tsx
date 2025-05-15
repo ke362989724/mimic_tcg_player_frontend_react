@@ -5,12 +5,11 @@ import {
   SidebarFooter,
   SidebarHeader,
 } from "@/components/ui/sidebar";
-import { CardCategoryProp } from "@/interface/card-category-list";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 
 function AppSidebar() {
-  const { data } = useQuery({
+  const cardCategoryList = useQuery({
     queryKey: ["cardCategoryList"],
     queryFn: async () => {
       return await getCategoryList();
@@ -20,17 +19,18 @@ function AppSidebar() {
   });
 
   return (
-    data && (
+    cardCategoryList.data && (
       <Sidebar>
         <SidebarHeader className="flex border-b-2">
           <div className="p1">Card Category</div>
         </SidebarHeader>
         <SidebarContent className="gap-0">
-          {data?.data.map((el: CardCategoryProp) => {
+          {cardCategoryList.data.map((el, index) => {
             return (
               <Link
                 to="/"
                 className="hover:bg-accent border-b p-3 duration-200 ease-in-out"
+                key={el.name + index}
               >
                 <div>{el.name}</div>
               </Link>

@@ -12,10 +12,10 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import icon from "/icon.svg";
+import CreateProductButton from "./create-product-button/create-product-button";
 
 const AvatarComponent = () => {
   return (
@@ -48,9 +48,9 @@ const Header = (props: Props) => {
   const isAuth = useAuth();
 
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex h-15 items-center justify-between">
       <Link to={"/"}>
-        <img src="/icon.svg" alt="icon" className="w-[166px]" />
+        <img src={icon} alt="icon" className="w-[166px]" />
       </Link>
       <div className="flex items-center">
         <SidebarTrigger />
@@ -60,14 +60,14 @@ const Header = (props: Props) => {
               {iconList.map((el, index) =>
                 el.type === "link" ? (
                   <Link
-                    key={index}
+                    key={"header-link" + index}
                     to={el.link}
                     className="hover:bg-accent p-1 sm:p-2 md:p-2 lg:p-3"
                   >
                     {el.icon}
                   </Link>
                 ) : (
-                  <>
+                  <React.Fragment key={"header-dropdown-menu" + index}>
                     <DropdownMenu>
                       <DropdownMenuTrigger>
                         <div className="hover:bg-accent cursor-pointer p-1 sm:p-2 md:p-2 lg:p-3">
@@ -80,13 +80,14 @@ const Header = (props: Props) => {
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
-                  </>
+                  </React.Fragment>
                 ),
               )}
             </div>
-            <div className="hover:bg-accent cursor-pointer p-1 md:p-3">
+            <div className="hover:bg-accent cursor-pointer p-1 md:p-4">
               <AvatarComponent />
             </div>
+            <CreateProductButton />
           </>
         ) : (
           <div className="flex">

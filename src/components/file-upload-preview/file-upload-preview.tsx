@@ -1,22 +1,32 @@
-import React, { useState, useCallback, useEffect, useRef } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import { IoTrashBinOutline } from "react-icons/io5";
+import { cn } from "@/lib/utils";
+import { UseFormRegisterReturn } from "react-hook-form";
 
 interface FileWithPreview {
   file: File;
   preview: string;
 }
 
-const DragDropUpload: React.FC = () => {
+type DragDropUploadProps = {
+  error?: string;
+} & UseFormRegisterReturn;
+
+const DragDropUpload = (props: DragDropUploadProps) => {
+  const { error } = props;
   const [files, setFiles] = useState<FileWithPreview[]>([]);
+  const { onChange, ref, name } = props;
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Clean up object URLs when component unmounts
-  useEffect(() => {
-    return () => {
-      files.forEach((file) => URL.revokeObjectURL(file.preview));
+  const createSyntheticEvent = (name: string, value: typeof files) => {
+    return {
+      target: {
+        name,
+        value,
+      },
     };
-  }, [files]);
+  };
 
   const handleDragEnter = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -35,47 +45,78 @@ const DragDropUpload: React.FC = () => {
     e.stopPropagation();
   }, []);
 
-  const handleDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
+  const handleDrop = useCallback(
+    (e: React.DragEvent<HTMLDivElement>) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setIsDragging(false);
 
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      const newFiles = Array.from(e.dataTransfer.files).map((file) => ({
-        file,
-        preview: URL.createObjectURL(file),
-      }));
-      setFiles(newFiles);
-    }
-  }, []);
+      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        const newFiles = [
+          ...files,
+          ...Array.from(e.dataTransfer.files).map((file) => ({
+            file,
+            preview: URL.createObjectURL(file),
+          })),
+        ];
+        onChange?.(createSyntheticEvent(name, newFiles));
+        setFiles(newFiles);
+      }
+    },
+    [files, onChange],
+  );
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      const newFiles = Array.from(e.target.files).map((file) => ({
-        file,
-        preview: URL.createObjectURL(file),
-      }));
+      const newFiles = [
+        ...files,
+        ...Array.from(e.target.files).map((file) => ({
+          file,
+          preview: URL.createObjectURL(file),
+        })),
+      ];
+
+      onChange?.(createSyntheticEvent(name, newFiles));
       setFiles(newFiles);
     }
   };
-
-  console.log("files", files);
 
   const triggerFileInput = () => {
     fileInputRef.current?.click();
   };
 
   const removeFile = (index: number) => {
-    const newFiles = [...files];
-    URL.revokeObjectURL(newFiles[index].preview);
-    newFiles.splice(index, 1);
-    setFiles(newFiles);
+    // Create a new array first
+    const prevFiles = files;
+    const updatedFiles = [...prevFiles];
+
+    // Get the file to be removed
+    const fileToRemove = updatedFiles[index];
+
+    // Remove the file from array
+    updatedFiles.splice(index, 1);
+
+    // Revoke the URL after a small delay to ensure React has updated
+    setTimeout(() => {
+      if (fileToRemove?.preview) {
+        URL.revokeObjectURL(fileToRemove.preview);
+      }
+    }, 100);
+
+    onChange?.(createSyntheticEvent(name, updatedFiles));
+
+    setFiles(updatedFiles);
   };
 
   return (
-    <div className="mx-auto my-10 max-w-[1240px]">
+    <div
+      className={cn("", {
+        "rounded-2xl border p-4 shadow-2xl": files.length > 0,
+      })}
+      ref={ref}
+    >
       <div
-        className={`m-auto cursor-pointer rounded-lg border-2 border-dashed border-blue-500 py-60 text-center ${
+        className={`m-auto cursor-pointer rounded-lg border-2 border-dashed border-blue-500 py-20 text-center md:py-60 ${
           isDragging ? "border-blue-500 bg-blue-50" : "border-gray-300"
         }`}
         onDragEnter={handleDragEnter}
@@ -93,40 +134,64 @@ const DragDropUpload: React.FC = () => {
         >
           Select Files
         </button>
+        <p className="mb-2 text-gray-600">Maximum 10 picture</p>
         <input
           type="file"
           ref={fileInputRef}
           onChange={handleFileChange}
           className="hidden"
           multiple
+          accept=".jpg,.jpeg,.png"
         />
       </div>
+      {error && <div className="text-destructive p3">{error}</div>}
       {files.length > 0 && (
         <div className="mt-4">
-          {/* <h3 className="mb-2 font-medium text-gray-900">Selected Files:</h3> */}
-          <ul className="grid max-w-[1240px] grid-cols-3 space-y-2">
+          <ul className="grid max-w-[1240px] grid-cols-2 gap-3 md:grid-cols-3">
             {files.map(({ file, preview }, index) => (
-              <li
-                key={preview + index}
-                className="flex items-center rounded-md border p-2"
-              >
-                {true ? (
-                  <div className="relative">
-                    <img
-                      src={preview}
-                      alt={file.name}
-                      className="mr-3 object-cover"
-                    />
-                    <div
-                      className="absolute top-2 right-2 cursor-pointer rounded-full bg-white p-1"
-                      onClick={() => {
-                        removeFile(index);
-                      }}
-                    >
-                      <IoTrashBinOutline className="h-4 w-4" />
+              <li key={preview + index} className="flex items-end">
+                {index > 0 ? (
+                  <div className="bg-accent mb-2 flex h-50 w-full items-center justify-center rounded-sm">
+                    <div className="relative h-full w-full rounded-md">
+                      <img
+                        src={preview}
+                        alt={file.name}
+                        className="h-full w-full object-contain"
+                      />
+                      <div
+                        className="absolute top-2 right-2 cursor-pointer rounded-full bg-white p-1"
+                        onClick={() => {
+                          removeFile(index);
+                        }}
+                      >
+                        <IoTrashBinOutline className="h-4 w-4" />
+                      </div>
                     </div>
                   </div>
-                ) : null}
+                ) : (
+                  <div className="relative w-full rounded-sm bg-black pt-12 pr-1 pb-2 pl-1">
+                    <div className="p2 absolute top-2 left-1/2 -translate-x-1/2 text-white">
+                      Cover
+                    </div>
+                    <div className="bg-accent flex h-50 items-center justify-center rounded-sm">
+                      <div className="relative h-full w-full rounded-md">
+                        <img
+                          src={preview}
+                          alt={file.name}
+                          className="h-full w-full object-contain"
+                        />
+                        <div
+                          className="absolute top-2 right-2 cursor-pointer rounded-full bg-white p-1"
+                          onClick={() => {
+                            removeFile(index);
+                          }}
+                        >
+                          <IoTrashBinOutline className="h-4 w-4" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </li>
             ))}
           </ul>

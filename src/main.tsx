@@ -8,13 +8,12 @@ import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "./redux/store";
 import { Provider } from "react-redux";
 import RootLayout from "./layout/rootLayout/root-layout";
-import Login from "./pages/login/login";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import SignUp from "./pages/sign-up/sign-up";
 import CreateAccountSuccess from "./pages/create-account-success/create-account-success";
-import useAuth from "./custom-hook/useAuth";
 import ProtectedRouteLayout from "./layout/rootLayout/protected-root-layout";
 import CreateProduct from "./pages/create-product/create-product";
+import NotFound from "./pages/not-found/not-found";
 
 const router = createBrowserRouter([
   {
@@ -39,7 +38,13 @@ const router = createBrowserRouter([
             path: "/create-product",
             element: <CreateProduct />,
           },
+          { path: "/like-product", element: <CreateProduct /> },
+          { path: "/update-product/:productId", element: <CreateProduct /> },
         ],
+      },
+      {
+        path: "*",
+        element: <NotFound />, // Your custom 404 component
       },
     ],
   },

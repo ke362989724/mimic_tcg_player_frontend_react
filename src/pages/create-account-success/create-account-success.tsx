@@ -9,8 +9,6 @@ const CreateAccountSuccess = (props: Props) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  console.log("location.state?.from", location.state?.from);
-
   useEffect(() => {
     if (location.state?.from !== "/sign-up") {
       navigate("/", { replace: true });
