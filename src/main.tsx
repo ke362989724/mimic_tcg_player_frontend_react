@@ -14,6 +14,8 @@ import CreateAccountSuccess from "./pages/create-account-success/create-account-
 import ProtectedRouteLayout from "./layout/rootLayout/protected-root-layout";
 import CreateProduct from "./pages/create-product/create-product";
 import NotFound from "./pages/not-found/not-found";
+import Home from "./pages/home/home";
+import Search from "./pages/search/search";
 
 const router = createBrowserRouter([
   {
@@ -21,7 +23,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <div></div>,
+        element: <Home />,
       },
       {
         path: "/sign-up",
@@ -30,6 +32,16 @@ const router = createBrowserRouter([
       {
         path: "/create-account-success",
         element: <CreateAccountSuccess />,
+      },
+      {
+        path: "/search",
+        element: <Search />,
+        children: [
+          {
+            path: ":searchParams",
+            element: <Search />,
+          },
+        ],
       },
       {
         element: <ProtectedRouteLayout />,

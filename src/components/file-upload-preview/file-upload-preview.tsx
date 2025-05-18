@@ -8,12 +8,16 @@ interface FileWithPreview {
   preview: string;
 }
 
-type DragDropUploadProps = {
-  error?: string;
-} & UseFormRegisterReturn;
+type DragDropUploadProps = Partial<
+  {
+    error?: string;
+    isMultiple: boolean;
+    showPreview: boolean;
+  } & UseFormRegisterReturn
+>;
 
 const DragDropUpload = (props: DragDropUploadProps) => {
-  const { error } = props;
+  const { error, isMultiple, showPreview } = props;
   const [files, setFiles] = useState<FileWithPreview[]>([]);
   const { onChange, ref, name } = props;
   const [isDragging, setIsDragging] = useState(false);
@@ -140,12 +144,12 @@ const DragDropUpload = (props: DragDropUploadProps) => {
           ref={fileInputRef}
           onChange={handleFileChange}
           className="hidden"
-          multiple
+          multiple={isMultiple}
           accept=".jpg,.jpeg,.png"
         />
       </div>
-      {error && <div className="text-destructive p3">{error}</div>}
-      {files.length > 0 && (
+      {error && <div className="text-destructive p3 text-left">{error}</div>}
+      {showPreview && files.length > 0 && (
         <div className="mt-4">
           <ul className="grid max-w-[1240px] grid-cols-2 gap-3 md:grid-cols-3">
             {files.map(({ file, preview }, index) => (

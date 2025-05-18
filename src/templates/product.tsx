@@ -110,14 +110,14 @@ const Product = () => {
   const createRecordMutate = useMutation({
     mutationFn: async (data: CreateLoginSchema) => {
       setUploadProgress(() => 0);
-      const multipleResponse = (await getPreSignedUrlMultiple({
+      const multipleResponse = await getPreSignedUrlMultiple({
         fileNumber: data.imageList.length,
-      })) as unknown as string[];
+      });
 
       const uploadPromises = Array.from(data.imageList).map(
         async (image, index) => {
           return uploadMultipleImage({
-            preSignedUrl: multipleResponse[index],
+            preSignedUrl: multipleResponse[index].signedUrl,
             file: image.file,
             fileNumber: index,
           });
@@ -132,6 +132,12 @@ const Product = () => {
           window.alert(JSON.stringify(error));
         });
 
+      console.log(
+        "multipleResponse",
+        multipleResponse,
+        import.meta.env.VITE_R2_PUBLIC_ENDPOINT,
+      );
+
       await createProduct({
         name: data.title,
         description: data.content,
@@ -139,10 +145,16 @@ const Product = () => {
         qty: data.number,
         cardCategoryId: data.cardCategory,
         cardConditionId: data.cardCondition,
-        images: multipleResponse,
+        images: multipleResponse.map(
+          (image) =>
+            import.meta.env.VITE_R2_PUBLIC_ENDPOINT + image.presignedKey,
+        ),
         currencyId: "02eaed63-1d5c-4d88-bf4d-170a09b8a4cc",
       }).then(() => {
         setUploadProgress(() => 100);
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 500);
       });
     },
     onSuccess: () => {},
@@ -156,6 +168,8 @@ const Product = () => {
     createRecordMutate.mutate(data);
     setOpenDialog(true);
   };
+
+  console.log("testingWatch", watch("imageList"));
 
   return (
     <>

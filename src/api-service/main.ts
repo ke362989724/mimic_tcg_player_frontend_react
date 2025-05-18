@@ -1,5 +1,7 @@
 import { AxiosErrorProps } from "@/interface/axios";
 import axios from "axios";
+import { ProductProps } from "@/interface/product-list";
+import { PresignedProps } from "@/interface/pre-signed-url";
 
 interface CreateUserProps {
   email: string;
@@ -42,7 +44,15 @@ export interface CreateProductProps {
   currencyId: string;
 }
 
-export type CreateProduct = {};
+export type GetProductListProps = {
+  page?: string;
+  limit?: string;
+  cardConditionId?: string;
+  cardCategoryId?: string;
+  search?: string;
+  cursor?: string;
+  sort?: string;
+};
 
 let isRefreshing = false;
 
@@ -117,7 +127,7 @@ export const getPreSignedUrlMultiple = ({
   fileNumber,
 }: {
   fileNumber: number;
-}) => {
+}): Promise<PresignedProps[]> => {
   return instance.get("r2/presigned-url-multiple-image-files", {
     params: {
       fileNumber: fileNumber,
@@ -135,4 +145,22 @@ export const createProduct = (createProduct: CreateProductProps) => {
 
 export const refreshAccessToken = () => {
   return instance.post("auth/access-token");
+};
+
+export const getProductList = (
+  props: GetProductListProps,
+): Promise<ProductProps> => {
+  const { page, limit, cardConditionId, cardCategoryId, search, cursor, sort } =
+    props;
+  return instance.get("product/list", {
+    params: {
+      page: page,
+      limit: limit,
+      cardConditionId: cardConditionId,
+      cardCategoryId: cardCategoryId,
+      search: search,
+      cursor: cursor,
+      sort: sort,
+    },
+  });
 };

@@ -4,7 +4,6 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/app-sidebar/app-sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import { DialogProvider } from "@/context/DialogContext";
-import CustomDialog from "@/components/dialog/dialog";
 
 export default function Layout() {
   return (
@@ -17,7 +16,6 @@ export default function Layout() {
             <Header />
             <Outlet />
           </div>
-          <CustomDialog />
         </main>
       </SidebarProvider>
     </DialogProvider>

@@ -18,6 +18,7 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { AxiosErrorProps } from "@/interface/axios";
 import { useNavigate } from "react-router-dom";
+import DragDropUpload from "@/components/file-upload-preview/file-upload-preview";
 
 interface FormData {
   email: string;
@@ -47,6 +48,11 @@ export interface Country {
 }
 
 const SignUp = () => {
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const onCropComplete = (croppedArea: any, croppedAreaPixels: any) => {
+    console.log(croppedArea, croppedAreaPixels);
+  };
   const navigate = useNavigate();
   const postCreateUserMutate = useMutation({
     mutationFn: async (data: FormData) => {
@@ -146,6 +152,7 @@ const SignUp = () => {
       username: z.string().min(8).max(20),
       country: z.string(),
       confirmPassword: z.string().min(8).max(20),
+      avatar: z.string().optional(),
     })
     .superRefine((val, ctx) => {
       if (val.password !== val.confirmPassword) {
