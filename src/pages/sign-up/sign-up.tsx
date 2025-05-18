@@ -187,11 +187,12 @@ const SignUp = () => {
           {inputFieldList.map((el, index) =>
             el.inputType === "input" ? (
               <div key={"login" + el.label + index}>
-                <Label htmlFor={el.htmlFor} className="mx-1">
+                <Label htmlFor={el.htmlFor} className="mx-1 !gap-0.5">
                   {el.label}
+                  <span className="text-destructive">*</span>
                 </Label>
                 <Input
-                  className="mt-2"
+                  className="mt-2 gap-0.5"
                   {...register(el.code)}
                   type={el.type}
                   placeholder={el.placeholder}
@@ -204,8 +205,9 @@ const SignUp = () => {
               </div>
             ) : el.inputType === "select" ? (
               <div key={"login" + el.label + index}>
-                <Label htmlFor={el.htmlFor} className="mx-1">
+                <Label htmlFor={el.htmlFor} className="mx-1 !gap-0.5">
                   {el.label}
+                  <span className="text-destructive">*</span>
                 </Label>
                 <Select
                   onValueChange={(value) => {
