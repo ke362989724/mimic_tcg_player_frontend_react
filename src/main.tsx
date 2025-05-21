@@ -16,6 +16,8 @@ import CreateProduct from "./pages/create-product/create-product";
 import NotFound from "./pages/not-found/not-found";
 import Home from "./pages/home/home";
 import Search from "./pages/search/search";
+import UnprotectedRouteLayout from "./layout/rootLayout/unprotected-root-layout";
+import ProductDetail from "./pages/product-detail/product-detail";
 
 const router = createBrowserRouter([
   {
@@ -24,10 +26,6 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
-      },
-      {
-        path: "/sign-up",
-        element: <SignUp />,
       },
       {
         path: "/create-account-success",
@@ -40,6 +38,19 @@ const router = createBrowserRouter([
           {
             path: ":searchParams",
             element: <Search />,
+          },
+        ],
+      },
+      {
+        path: "product/:productId",
+        element: <ProductDetail />,
+      },
+      {
+        element: <UnprotectedRouteLayout />,
+        children: [
+          {
+            path: "/sign-up",
+            element: <SignUp />,
           },
         ],
       },

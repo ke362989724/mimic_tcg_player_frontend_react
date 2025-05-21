@@ -169,7 +169,7 @@ const Product = () => {
     setOpenDialog(true);
   };
 
-  console.log("testingWatch", watch("imageList"));
+  console.log("testingWatch", watch("imageList")?.length);
 
   return (
     <>
@@ -177,14 +177,14 @@ const Product = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col gap-10 md:flex-row">
             <div
-              className={cn({
+              className={cn("mx-auto w-full max-w-[1240px]", {
                 "flex-1/3": watch("imageList")?.length > 0,
-                "mx-auto w-full max-w-[1240px]":
-                  watch("imageList")?.length === 0,
               })}
             >
               <FilePreviewUpload
                 error={errors["imageList"]?.message}
+                isMultiple={true}
+                showPreview={true}
                 {...register("imageList", {
                   required: "this field is required",
                 })}

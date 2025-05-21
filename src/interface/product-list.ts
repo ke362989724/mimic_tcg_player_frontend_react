@@ -10,8 +10,10 @@ export interface Product {
   price: string;
   qty: number;
   createdAt: Date;
+  sellerId: string;
   cardCategory: CardCategory;
   cardCondition: CardCondition;
+  seller: Seller;
   images: Image[];
 }
 
@@ -29,4 +31,21 @@ export interface Image {
   imageUrl: string;
   isCoverImage: boolean;
   createdAt: Date;
+}
+
+export interface Seller {
+  countryId: string;
+  nickname: string;
+  country: Country;
+}
+
+export interface Country {
+  name: string;
+  currency: Currency;
+}
+
+export interface Currency {
+  name: string;
+  currencyCode: string;
+  symbol: string;
 }

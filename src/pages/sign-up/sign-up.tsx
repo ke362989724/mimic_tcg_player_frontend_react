@@ -184,6 +184,7 @@ const SignUp = () => {
     <div className="flex w-full flex-1 items-center justify-center">
       <div className="w-full max-w-[1000px] py-20 text-center shadow-2xl">
         <form className="mx-10 space-y-5" onSubmit={handleSubmit(onSubmit)}>
+          <div></div>
           {inputFieldList.map((el, index) =>
             el.inputType === "input" ? (
               <div key={"login" + el.label + index}>

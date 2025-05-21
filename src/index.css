@@ -1,6 +1,13 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+
 @import "tailwindcss";
 
 @custom-variant dark (&:is(.dark *));
+
+@theme {
+  --font-noto: "Noto Sans TC", sans-serif;
+  --font-roboto: "Roboto", sans-serif;
+}
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
@@ -115,32 +122,33 @@
   }
   body {
     @apply bg-background text-foreground;
+    width: 100vw;
+    font-family: "Noto Sans TC", "Roboto", sans-serif;
   }
 }
 
 .title {
-  @apply font-bold;
   @apply text-3xl lg:text-4xl;
 }
 
 .p1 {
-  @apply font-semibold;
   @apply text-xl lg:text-2xl;
 }
 
 .p2 {
-  @apply font-medium;
   @apply text-lg lg:text-xl;
 }
 
 .p3 {
-  @apply font-normal;
   @apply text-base lg:text-lg;
 }
 
 .p4 {
-  @apply font-light;
   @apply text-sm lg:text-base;
+}
+
+.p5 {
+  @apply text-xs lg:text-sm;
 }
 
 input[type="number"]::-webkit-outer-spin-button,

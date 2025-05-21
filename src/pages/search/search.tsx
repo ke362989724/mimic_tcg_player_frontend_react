@@ -8,18 +8,16 @@ import { useDebounce } from "use-debounce";
 import { CiSearch } from "react-icons/ci";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
+import SearchBar from "@/components/searchbar/searchbar";
+import ProductCard from "@/components/product-card/product-card";
 
 type Props = {};
 
 const Search = (props: Props) => {
   const {} = props;
   const params = useParams();
-  const [searchParams] = useSearchParams();
   const searchInLink = params.searchParams ?? "";
-  const [searchInput, setSearchInput] = useState(searchInLink);
-  const [bufferSearchInput, setBufferSearchInput] = useState(searchInLink);
   const [limit, setLimit] = useState(10);
-  const [debounceSearchInput] = useDebounce(searchInput, 500);
   const [categoryId, setCategoryId] = useState("");
   const fixedTimeStamp = useRef(Date.now());
 
@@ -27,82 +25,31 @@ const Search = (props: Props) => {
     queryKey: [],
     queryFn: async () => {
       return await getProductList({
-        search: debounceSearchInput,
+        search: searchInLink,
         cursor: fixedTimeStamp.current.toString(),
       });
     },
   });
 
-  const handleSearch = () => {
-    window.location.href = `/search/${bufferSearchInput}`;
-  };
-
-  console.log("productList", productList.data);
-
   return (
     <div className="my-5">
-      <div className="relative flex">
-        <CiSearch
-          size={20}
-          className="absolute top-1/2 left-3 -translate-y-1/2"
-        />
-        {searchInput && (
-          <div className="bg-accent absolute top-1/2 right-5 hidden -translate-y-1/2 cursor-pointer rounded-full p-1 md:right-[90px] md:block">
-            <MdOutlineClose
-              className=""
-              size={12}
-              onClick={() => {
-                setSearchInput("");
-              }}
-            />
-          </div>
-        )}
-        <Input
-          className="rounded-none pl-10 md:pr-10"
-          onChange={(e) => {
-            setBufferSearchInput(e.target.value);
-          }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              handleSearch();
-            }
-          }}
-          value={bufferSearchInput}
-        />
-        <Button
-          className="hidden cursor-pointer rounded-none md:block"
-          onClick={handleSearch}
-        >
-          Submit
-        </Button>
-      </div>
-      <div className="mt-4 grid grid-cols-4 gap-3 rounded-sm p-8 shadow-md">
-        {productList.isLoading &&
-          Array.from({ length: limit }, (_, index) => {
-            return (
-              <div key={"skeleton" + index}>
-                <Skeleton className="h-40 w-full" />
-                <Skeleton className="mt-2 h-10 w-full" />
-                <Skeleton className="mt-1 h-5 w-1/3" />
-                <Skeleton className="mt-1 h-5 w-1/5" />
-              </div>
-            );
-          })}
+      <SearchBar />
+      <div className="mt-4 grid grid-cols-3 gap-2 rounded-sm p-4 shadow-md md:grid-cols-4 md:gap-3 md:p-8">
         {productList.data?.products &&
-          productList.data?.products.map((product, index) => {
+          productList.data?.products.map((product) => {
             return (
-              <div key={product.id}>
-                <img
-                  src={
-                    product.images[0].imageUrl ? product.images[0].imageUrl : ""
-                  }
-                  alt={"testing"}
-                  className="w-full"
-                />
-                <p className="mt-2">{product.name}</p>
-                <p className="mt-1">{product.price}</p>
-                <p className="mt-1">{product.category}</p>
-              </div>
+              <ProductCard
+                key={product.id}
+                title={product.name}
+                price={product.price}
+                coverImage={product.images[0].imageUrl}
+                cardCondition={product.cardCondition.name}
+                createdAt={product.createdAt}
+                nickname={product.seller.nickname}
+                currencySymbol={product.seller.country.currency.symbol}
+                currencyCode={product.seller.country.currency.currencyCode}
+                productId={product.id}
+              />
             );
           })}
       </div>

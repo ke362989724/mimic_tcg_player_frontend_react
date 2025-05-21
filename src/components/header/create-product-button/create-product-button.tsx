@@ -10,11 +10,11 @@ const CreateProductButton = (props: Props) => {
   return (
     <Dialog
       onOpenChange={() => {
-        navigate("/create-product");
+        window.location.href = "/create-product";
       }}
     >
       <DialogTrigger asChild className="mx-1">
-        <Button className="cursor-pointer">Sell item</Button>
+        <Button className="mx-0 cursor-pointer">Sell item</Button>
       </DialogTrigger>
     </Dialog>
   );
