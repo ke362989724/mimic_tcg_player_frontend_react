@@ -10,9 +10,9 @@ export default function Layout() {
     <DialogProvider>
       <SidebarProvider defaultOpen={false}>
         <AppSidebar />
-        <main className="mx-2 w-full md:mx-4">
+        <main className="mx-2 w-full overflow-auto md:mx-4">
           <Toaster />
-          <div className="flex h-screen flex-col">
+          <div className="h-screen">
             <Header />
             <Outlet />
           </div>

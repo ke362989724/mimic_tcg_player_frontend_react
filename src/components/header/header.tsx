@@ -48,7 +48,7 @@ const Header = (props: Props) => {
   const isAuth = useAuth();
 
   return (
-    <div className="flex h-15 items-center justify-between">
+    <div className="mb-8 flex h-15 items-center justify-between">
       <Link to={"/"}>
         <img src={icon} alt="icon" className="w-[166px]" />
       </Link>

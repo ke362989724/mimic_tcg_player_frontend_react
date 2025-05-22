@@ -1,4 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+@import "swiper/css/pagination";
+@import "swiper/css/pagination";
+@import "swiper/css/navigation";
+@import "swiper/css/scrollbar";
+@import "swiper/css";
+@import "swiper/css/effect-coverflow";
 
 @import "tailwindcss";
 
@@ -122,7 +128,8 @@
   }
   body {
     @apply bg-background text-foreground;
-    width: 100vw;
+    overflow: auto;
+    width: 100%;
     font-family: "Noto Sans TC", "Roboto", sans-serif;
   }
 }

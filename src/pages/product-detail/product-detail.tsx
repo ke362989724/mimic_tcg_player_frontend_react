@@ -5,8 +5,8 @@ type Props = {};
 
 const ProductDetail = (props: Props) => {
   return (
-    <div>
-      <div></div>
+    <div className="">
+      <SwiperComponent />
     </div>
   );
 };

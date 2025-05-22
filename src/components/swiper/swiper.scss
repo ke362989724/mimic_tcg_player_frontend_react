@@ -1,0 +1,12 @@
+.custom-bullet {
+  width: 12px;
+  height: 12px;
+  background-color: #ccc;
+  border-radius: 50%;
+  margin: 0 5px;
+  cursor: pointer;
+}
+
+.custom-bullet-active {
+  background-color: #007aff;
+}
